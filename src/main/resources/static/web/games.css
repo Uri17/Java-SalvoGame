@@ -1,0 +1,33 @@
+
+
+.table-dark {
+    background-color: #15233a;
+    border-color: cadetblue;
+    color: aliceblue;
+}
+
+.TitleGames {
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+
+    }
+
+.textCenter {
+     display: flex;
+     justify-content: center;
+
+     }
+
+.textEnd{
+      display: flex;
+      justify-content: flex-end;
+
+}
+
+
+.LogBlue{
+color: blue;
+
+}
+

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="games.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Salvo</title>
+</head>
+<body>
+
+<h1 class="TitleGames"> Leaderboard </h1>
+
+    <div id="tableLeaderBoard">
+
+        <div class="container">
+        <div class="TextCenter">
+
+
+            <!--<p v-if="gameData.UserLogged" class="LogBlue">{{gameData.UserLogged}}, welcome to SalvoGame! </p>-->
+            <p v-if="gameData.UserLogged"> UserName: {{gameData.UserLogged}}, welcome to salvoGame</p>
+
+
+            <div class="textStart">
+
+            <button v-if="gameData.UserLogged" class="createGame" v-on:click="CreateGame()">Create Game</button>
+
+              </div>
+
+
+        <div v-if="!gameData.UserLogged">
+        <form id="login-form" onsubmit="return false">
+            <label>Name: <input type="text"  v-model="ourData.userName" name="userName"></label>
+            <label>Email: <input type="text"  v-model="ourData.email" name="email"></label>
+            <label>Password: <input type="password"  v-model="ourData.pwd" name="password"></label>
+            <button  class="login" v-on:click="GetForm()">Log in</button>
+            <button  class="signUp"v-on:click="fetchSignUp()"> Sign Up</button>
+
+        </form>
+        </div>
+
+            <div class="textEnd" v-else>
+
+            <button class="logout" v-on:click="logout()" ><!--!v-if="gameData.playerLogged"-->Log Out</button>
+            </div>
+
+
+         </div>
+        </div>
+
+        <div class="container">
+        <div class="GridRow">
+
+            <table class="table table-sm table-dark "border="1">
+                <tr>
+                    <th>Player</th>
+                    <th>Name</th>
+                    <th>Won</th>
+                    <th>Tied</th>
+                    <th>Lost</th>
+                    <th>Total</th>
+                </tr>
+
+
+                 <tr v-for="value,index, key  in leaderBoard">
+
+                     <td>{{key}}</td>
+                    <td>{{index}}</td>
+                    <td>{{value.wins}}</td>
+                    <td>{{value.ties}}</td>
+                    <td>{{value.losses}}</td>
+                    <td>{{value.total}}</td>
+                <tr>
+
+                      <!--< <tr> v-if="leaderBoard.length == 0" > {{leaderBoard["Chloe O'Brian"]}}</tr> -->
+            </table>
+
+        </div>
+
+
+                    <div class="GridRow">
+
+                        <table class="table table-sm table-dark "border="1">
+                            <tr>
+                                <th>Game</th>
+                                <th>Created</th>
+                                <th>Player 1</th>
+                                <th>Player 2</th>
+                                <th>Enter Game</th>
+                            </tr>
+
+
+                            <tr v-for="item, key in gameData.games">
+                                <td>{{item.id}}</td>
+                                <td>{{formatDate(item.created)}}</td>
+                                <td v-for="gamePlayer in item.gamePlayers">{{gamePlayer.player.userName}}</td>
+                                <td v-if="item.gamePlayers.length == 1">waiting for player...</td>
+                                <td><a :href="`http://localhost:8080/web/game.html?gp=${item.gamePlayers[0].gpid}`"><button v-if="gameData.UserLogged == item.gamePlayers[0].player.userName">Rejoin game</button></a></td>
+                                <td v-if="gameData.UserLogged"><button v-on:click="JoinGame(item.id)" v-if="item.gamePlayers.length == 1 && gameData.UserLogged !== item.gamePlayers[0].player.userName">Join game</button></td>
+
+                                <!--window.location.href="http://localhost:8080/web/game.html?gp=" + data.gpid;-->
+                                <!--<td v-for="gp in sortedGamePlayers([...item.gamePlayer])">{{gp.player.userName}}</td>-->
+
+                            </tr>
+                        </table>
+
+        </div>
+        </div>
+    </div>
+
+
+<!--<ol class="ListGames" id="ListGames">
+
+</ol>
+
+</div>
+-->
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
+<script src="games.js"></script>
+</html>
+
+<!--
+
+<table class="GridGame" id="GridLocations" border="1">
+
+    <tbody id="GridGame">
+    <tr>
+        <td></td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+    </tr>
+    <tr>
+        <td>A</td>
+        <td id="A1"></td>
+        <td id="A2"></td>
+        <td id="A3"></td>
+        <td id="A4"></td>
+        <td id="A5"></td>
+        <td id="A6"></td>
+        <td id="A7"></td>
+        <td id="A8"></td>
+        <td id="A9"></td>
+        <td id="A10"></td>
+    </tr>
+    <tr>
+        <td>B</td>
+        <td id="B1"></td>
+        <td id="B2"></td>
+        <td id="B3"></td>
+        <td id="B4"></td>
+        <td id="B5"></td>
+        <td id="B6"></td>
+        <td id="B7"></td>
+        <td id="B8"></td>
+        <td id="B9"></td>
+        <td id="B10"></td>
+    </tr>
+    <tr>
+        <td>C</td>
+        <td id="C1"></td>
+        <td id="C2"></td>
+        <td id="C3"></td>
+        <td id="C4"></td>
+        <td id="C5"></td>
+        <td id="C6"></td>
+        <td id="C7"></td>
+        <td id="C8"></td>
+        <td id="C9"></td>
+        <td id="C10"></td>
+    </tr>
+    <tr>
+        <td>D</td>
+        <td id="D1"></td>
+        <td id="D2"></td>
+        <td id="D3"></td>
+        <td id="D4"></td>
+        <td id="D5"></td>
+        <td id="D6"></td>
+        <td id="D7"></td>
+        <td id="D8"></td>
+        <td id="D9"></td>
+        <td id="D10"></td>
+    </tr>
+    <tr>
+        <td>E</td>
+        <td id="E1"></td>
+        <td id="E2"></td>
+        <td id="E3"></td>
+        <td id="E4"></td>
+        <td id="E5"></td>
+        <td id="E6"></td>
+        <td id="E7"></td>
+        <td id="E8"></td>
+        <td id="E9"></td>
+        <td id="E10"></td>
+    </tr>
+    <tr>
+        <td>F</td>
+        <td id="F1"></td>
+        <td id="F2"></td>
+        <td id="F3"></td>
+        <td id="F4"></td>
+        <td id="F5"></td>
+        <td id="F6"></td>
+        <td id="F7"></td>
+        <td id="F8"></td>
+        <td id="F9"></td>
+        <td id="F10"></td>
+    </tr>
+    <tr>
+        <td>G</td>
+        <td id="G1"></td>
+        <td id="G2"></td>
+        <td id="G3"></td>
+        <td id="G4"></td>
+        <td id="G5"></td>
+        <td id="G6"></td>
+        <td id="G7"></td>
+        <td id="G8"></td>
+        <td id="G9"></td>
+        <td id="G10"></td>
+    </tr>
+    <tr>
+        <td>H</td>
+        <td id="H1"></td>
+        <td id="H2"></td>
+        <td id="H3"></td>
+        <td id="H4"></td>
+        <td id="H5"></td>
+        <td id="H6"></td>
+        <td id="H7"></td>
+        <td id="H8"></td>
+        <td id="H9"></td>
+        <td id="H10"></td>
+    </tr>
+    <tr>
+        <td>I</td>
+        <td id="I1"></td>
+        <td id="I2"></td>
+        <td id="I3"></td>
+        <td id="I4"></td>
+        <td id="I5"></td>
+        <td id="I6"></td>
+        <td id="I7"></td>
+        <td id="I8"></td>
+        <td id="I9"></td>
+        <td id="I10"></td>
+    </tr>
+
+    <tr>
+        <td>J</td>
+        <td id="J1"></td>
+        <td id="J2"></td>
+        <td id="J3"></td>
+        <td id="J4"></td>
+        <td id="J5"></td>
+        <td id="J6"></td>
+        <td id="J7"></td>
+        <td id="J8"></td>
+        <td id="J9"></td>
+        <td id="J10"></td>
+    </tr>
+    </tbody>
+</table>
+-->
